@@ -4,7 +4,7 @@ from io import BytesIO
 import os
 
 from PIL import Image, ImageDraw, ImageFont
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, make_response
 import requests
 
 app = Flask(__name__)
@@ -138,7 +138,20 @@ def get_card(username: str):
     try:
         sanitized_username = "".join(c for c in username if c.isalnum() or c == "_")
         img_io = open(f"cards/{sanitized_username}.png", "rb")
-        return send_file(img_io, mimetype="image/png"), 200
+        response = make_response(
+            send_file(
+                img_io,
+                mimetype="image/png",
+                download_name=f"{sanitized_username}-rank-card.png",
+            )
+        )
+        response.headers["Content-Disposition"] = (
+            f"attachment; filename={sanitized_username}-rank-card.png"
+        )
+        response.headers["Content-Type"] = "image/png"
+
+        return response
+
     except FileNotFoundError:
         return "Image not found", 404
 
@@ -208,4 +221,4 @@ def new_card():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=2002, ssl_context=("cert.pem", "key.pem"))
+    app.run(host="127.0.0.1", port=2053)
