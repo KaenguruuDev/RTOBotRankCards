@@ -159,7 +159,7 @@ def get_card(username: str):
         return "Image not found", 404
 
 
-@app.route("/card/new", methods=["GET", "POST"])
+@app.route("/card/new", methods=["POST"])
 def new_card():
     """Returns the card image for the user"""
 
@@ -170,14 +170,14 @@ def new_card():
 
     try:
         print("Checking for request args")
-        username = request.args.get("username")
-        xp = int(request.args.get("xp"))
-        target_xp = int(request.args.get("target_xp"))
-        level = int(request.args.get("level"))
-        rank = int(request.args.get("rank"))
-        progress = int(request.args.get("progress"))
-        avatar_url = request.args.get("avatar_url")
-        color = request.args.get("color")
+        username = request.form.get("username")
+        xp = int(request.form.get("xp"))
+        target_xp = int(request.form.get("target_xp"))
+        level = int(request.form.get("level"))
+        rank = int(request.form.get("rank"))
+        progress = int(request.form.get("progress"))
+        avatar_url = request.form.get("avatar_url")
+        color = request.form.get("color")
 
         if not all([username, xp, level, rank, progress, avatar_url, color, target_xp]):
             return "Missing parameters", 400
@@ -192,8 +192,8 @@ def new_card():
             avatar_url,
             hex_to_rgb(color),
         )
-    except TypeError:
-        print("No request args found. Checking for json")
+    except TypeError as ex:
+        print(f"No request args found. Checking for json: {ex}")
         data = request.json
 
         if not data:
@@ -224,6 +224,12 @@ def new_card():
     card.save(f"cards/{sanitized_username}.png", "PNG")
 
     return f"/cards/{sanitized_username}", 200
+
+
+@app.route("/")
+def index():
+    """Returns the index page"""
+    html = """"""
 
 
 if __name__ == "__main__":
