@@ -156,7 +156,7 @@ def get_card(username: str):
         return "Image not found", 404
 
 
-@app.route("/card/new", methods=["POST"])
+@app.route("/card/new", methods=["GET", "POST"])
 def new_card():
     """Returns the card image for the user"""
 
