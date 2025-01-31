@@ -7,7 +7,10 @@ from PIL import Image, ImageDraw, ImageFont
 from flask import Flask, request, send_file, make_response
 import requests
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 class User:
@@ -160,6 +163,9 @@ def get_card(username: str):
 def new_card():
     """Returns the card image for the user"""
 
+    print(f"Received {request.method} request at /card/new")
+    print("Headers:", request.headers)
+
     user = None
 
     try:
@@ -222,3 +228,4 @@ def new_card():
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=2053)
+    print(app.url_map)
