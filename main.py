@@ -139,6 +139,8 @@ def get_card(username: str):
         return "Missing parameters", 400
 
     try:
+        sanitized_username = username.split("-")[0] if "-" in username else username
+
         sanitized_username = "".join(c for c in username if c.isalnum() or c == "_")
         img_io = open(f"cards/{sanitized_username}.png", "rb")
         response = make_response(
@@ -223,7 +225,7 @@ def new_card():
 
     card.save(f"cards/{sanitized_username}.png", "PNG")
 
-    return f"/cards/{sanitized_username}", 200
+    return f"/cards/{sanitized_username}-{data['color'].replace('#', '')}", 200
 
 
 @app.route("/")
