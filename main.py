@@ -139,7 +139,7 @@ def get_card(username: str):
         return "Missing parameters", 400
 
     try:
-        sanitized_username = username.split("-")[0] if "-" in username else username
+        sanitized_username = username.split("?")[0] if "?" in username else username
 
         sanitized_username = "".join(c for c in username if c.isalnum() or c == "_")
         img_io = open(f"cards/{sanitized_username}.png", "rb")
@@ -147,11 +147,11 @@ def get_card(username: str):
             send_file(
                 img_io,
                 mimetype="image/png",
-                download_name=f"{sanitized_username}-rank-card.png",
+                download_name=f"{sanitized_username}-card.png",
             )
         )
         response.headers["Content-Disposition"] = (
-            f"attachment; filename={sanitized_username}-rank-card.png"
+            f"attachment; filename={sanitized_username}-card.png"
         )
         response.headers["Content-Type"] = "image/png"
 
@@ -225,13 +225,89 @@ def new_card():
 
     card.save(f"cards/{sanitized_username}.png", "PNG")
 
-    return f"/cards/{sanitized_username}-{data['color'].replace('#', '')}", 200
+    return f"/cards/{sanitized_username}?color={data['color'].replace('#', '')}", 200
 
 
 @app.route("/")
 def index():
     """Returns the index page"""
-    html = """"""
+    html = """<!DOCTYPE html>
+            <html lang="en">
+
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>API Index</title>
+                <style>
+                    body {
+                        background-color: #1e1e1e;
+                        color: white;
+                        font-family: Arial, sans-serif;
+                        text-align: center;
+                        margin: 0;
+                        padding: 20px;
+                    }
+
+                    h1 {
+                        font-size: 2.5em;
+                        margin-bottom: 10px;
+                    }
+
+                    p {
+                        font-size: 1.2em;
+                        opacity: 0.8;
+                    }
+
+                    .container {
+                        max-width: 600px;
+                        margin: auto;
+                        padding: 20px;
+                        border-radius: 10px;
+                        background: rgba(255, 255, 255, 0.1);
+                    }
+
+                    .endpoint {
+                        font-size: 1.1em;
+                        background: rgba(255, 255, 255, 0.2);
+                        padding: 10px;
+                        border-radius: 5px;
+                        margin: 10px 0;
+                    }
+
+                    .image-container {
+                        margin-top: 20px;
+                    }
+
+                    .image-container img {
+                        width: 100%;
+                        max-width: 300px;
+                        border-radius: 10px;
+                        background: white;
+                        padding: 5px;
+                    }
+                </style>
+            </head>
+
+            <body>
+                <div class="container">
+                    <h1>API Status</h1>
+                    <p>If you see this, it's running ✅</p>
+
+                    <h2>Available Endpoints</h2>
+                    <div class="endpoint">🔹 <code>POST /card/new</code> - Create a new card</div>
+                    <div class="endpoint">🔹 <code>GET /cards/{username}</code> - Retrieve a user’s card</div>
+
+                    <div class="image-container">
+                        <h2>Example Image</h2>
+                        <img src="cards/KaenguruuDev.png" alt="Example API Card">
+                        <h2>Default Image</h2>
+                        <img src="cards/Default" alt="Default API Card">
+                    </div>
+                </div>
+            </body>
+
+            </html>"""
+    return html
 
 
 if __name__ == "__main__":
