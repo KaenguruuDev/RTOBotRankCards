@@ -225,7 +225,10 @@ def new_card():
 
     card.save(f"cards/{sanitized_username}.png", "PNG")
 
-    return f"/cards/{sanitized_username}?color={data['color'].replace('#', '')}", 200
+    return (
+        f"/cards/{sanitized_username}?color={data['color'].replace('#', '')}&xp={user.xp}",
+        200,
+    )
 
 
 @app.route("/")
