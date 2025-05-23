@@ -7,10 +7,10 @@ from PIL import Image, ImageDraw, ImageFont
 from flask import Flask, request, send_file, make_response
 import requests
 
-from werkzeug.middleware.proxy_fix import ProxyFix
+# from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+# app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 class User:
@@ -314,5 +314,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=2053, ssl_context=("cert.pem", "key.pem"))
+    app.run(host="127.0.0.1", port=2053)
     print(app.url_map)
