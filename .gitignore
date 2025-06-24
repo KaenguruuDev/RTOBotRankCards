@@ -1,3 +1,4 @@
 cards/*
 *.pem
 test.py
+.vscode/

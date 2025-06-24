@@ -83,7 +83,11 @@ def generate_card(user: User):
     avatar_data = requests.get(
         user.avatar_url.replace("size=128", "size=256"), timeout=5
     ).content
+
     avatar = Image.open(BytesIO(avatar_data))
+    if avatar.mode != "RGBA":
+        avatar = avatar.convert("RGBA")
+
     mask = Image.new("L", avatar.size, 0)
 
     draw = ImageDraw.Draw(mask)
@@ -168,18 +172,20 @@ def new_card():
     print(f"Received {request.method} request at /card/new")
     print("Headers:", request.headers)
 
+    data = request.get_json()
+
     user = None
 
     try:
         print("Checking for request args")
-        username = request.form.get("username")
-        xp = int(request.form.get("xp"))
-        target_xp = int(request.form.get("target_xp"))
-        level = int(request.form.get("level"))
-        rank = int(request.form.get("rank"))
-        progress = int(request.form.get("progress"))
-        avatar_url = request.form.get("avatar_url")
-        color = request.form.get("color")
+        username = data.get("username")
+        xp = int(data.get("xp"))
+        target_xp = int(data.get("target_xp"))
+        level = int(data.get("level"))
+        rank = int(data.get("rank"))
+        progress = int(data.get("progress"))
+        avatar_url = data.get("avatar_url")
+        color = data.get("color")
 
         if not all([username, xp, level, rank, progress, avatar_url, color, target_xp]):
             return "Missing parameters", 400
