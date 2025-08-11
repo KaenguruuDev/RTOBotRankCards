@@ -176,6 +176,7 @@ def get_test_image(name: str):
         )
     )
 
+    response.headers["Cache-Control"] = "immutable, max-age=31536000"
     response.headers["Content-Type"] = "image/png"
     response.headers["Content-Length"] = str(os.path.getsize(f"cards/{name}.png"))
 
