@@ -165,6 +165,23 @@ def get_card(username: str):
         return "Image not found", 404
 
 
+@app.route("/test/<name>.png", methods=["GET"])
+def get_test_image(name: str):
+    img_io = open(f"cards/{name}.png", "rb")
+    response = make_response(
+        send_file(
+            img_io,
+            mimetype="image/png",
+            download_name=f"image.png",
+        )
+    )
+
+    response.headers["Content-Type"] = "image/png"
+    response.headers["Content-Length"] = str(os.path.getsize(f"cards/{name}.png"))
+
+    return response
+
+
 @app.route("/card/new", methods=["POST"])
 def new_card():
     """Returns the card image for the user"""
@@ -320,5 +337,5 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=2053, ssl_context=("cert.pem", "key.pem"))
+    app.run(host="127.0.0.1", port=2053)
     print(app.url_map)
