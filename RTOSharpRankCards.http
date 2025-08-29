@@ -1,0 +1,6 @@
+@RTOSharpRankCards_HostAddress = http://localhost:5058
+
+GET {{RTOSharpRankCards_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,5 +1,6 @@
 .idea/
 bin/
 debug/
+obj/
 appsettings.json
 appsettings.Development.json
