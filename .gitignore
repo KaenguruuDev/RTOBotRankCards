@@ -4,3 +4,4 @@ debug/
 obj/
 appsettings.json
 appsettings.Development.json
+cards/
