@@ -35,7 +35,7 @@ public class Startup
 
 	private async Task GetCard(HttpContext context, string path)
 	{
-		var userPath = GetSafeFilePath("cards", Regex.Replace(path, @"_(\d+)_(\d+)\.png$", ""));
+		var userPath = GetSafeFilePath("cards", path);
 		if (!File.Exists(userPath))
 		{
 			context.Response.StatusCode = 404;
@@ -59,7 +59,7 @@ public class Startup
 		}
 
 		var path = await CreateCardFromData(data);
-		if (File.Exists(Regex.Replace(path, @"_(\d+)_(\d+)\.png$", "") + ".png"))
+		if (File.Exists(path))
 		{
 			await context.Response.WriteAsync(path);
 		}
@@ -134,28 +134,13 @@ public class Startup
 			ctx.FillRoundedRectangle(barColor, new RectangleF(barX, barY, barWidth * progress, barHeight), 5);
 		});
 
-		await img.SaveAsPngAsync(GetSafeFilePath("cards", $"{data.Username}"));
-		return GetSafeFilePath("cards", $"{data.Username}_{data.Level}_{data.Xp}");
+		await img.SaveAsPngAsync(GetSafeFilePath("cards", $"{data.GuildId}-{data.UserId}-{data.Level}-{data.Xp}"));
+		return GetSafeFilePath("cards", $"{data.GuildId}-{data.UserId}-{data.Level}-{data.Xp}");
 	}
 
-	private static string SanitizeUsername(string username)
+	private static string GetSafeFilePath(string baseDirectory, string id, string extension = ".png")
 	{
-		if (string.IsNullOrWhiteSpace(username))
-			throw new ArgumentException("Username cannot be empty");
-
-		var invalidChars = Path.GetInvalidFileNameChars();
-		foreach (var c in invalidChars)
-			username = username.Replace(c, '_');
-
-		username = Regex.Replace(username, @"(\.\.|[\\/])", "_");
-
-		return username;
-	}
-
-	private static string GetSafeFilePath(string baseDirectory, string username, string extension = ".png")
-	{
-		var safeName = SanitizeUsername(username);
-		return Path.Combine(baseDirectory, safeName + extension);
+		return Path.Combine(baseDirectory, id + extension);
 	}
 
 	private static string BeautifyXp(int xp)
@@ -169,6 +154,8 @@ public class Startup
 	private record CreateCardRequestData(
 		string Username,
 		string AvatarUrl,
+		int GuildId,
+		int UserId,
 		int Xp,
 		int Level,
 		int Rank,
