@@ -134,8 +134,8 @@ public class Startup
 			ctx.FillRoundedRectangle(barColor, new RectangleF(barX, barY, barWidth * progress, barHeight), 5);
 		});
 
-		await img.SaveAsPngAsync(GetSafeFilePath("cards", $"{data.GuildId}-{data.UserId}-{data.Level}-{data.Xp}"));
-		return GetSafeFilePath("cards", $"{data.GuildId}-{data.UserId}-{data.Level}-{data.Xp}");
+		await img.SaveAsPngAsync(GetSafeFilePath("cards", $"{data.GuildId}{data.UserId}{data.Level}{data.Xp}"));
+		return GetSafeFilePath("cards", $"{data.GuildId}{data.UserId}{data.Level}{data.Xp}");
 	}
 
 	private static string GetSafeFilePath(string baseDirectory, string id, string extension = ".png")
