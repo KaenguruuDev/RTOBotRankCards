@@ -58,6 +58,14 @@ public class Startup
 			return;
 		}
 
+
+		var existingFilesForUserInGuild = Directory.GetFiles("cards", $"{data.GuildId}{data.UserId}*");
+		if (existingFilesForUserInGuild.Length > 2)
+		{
+			foreach (var file in existingFilesForUserInGuild)
+				File.Delete(file);
+		}
+
 		var path = await CreateCardFromData(data);
 		if (File.Exists(path))
 		{
