@@ -154,8 +154,8 @@ public class Startup
 	private record CreateCardRequestData(
 		string Username,
 		string AvatarUrl,
-		int GuildId,
-		int UserId,
+		ulong GuildId,
+		ulong UserId,
 		int Xp,
 		int Level,
 		int Rank,
