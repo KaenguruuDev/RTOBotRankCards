@@ -35,7 +35,7 @@ public class Startup
 
 	private async Task GetCard(HttpContext context, string path)
 	{
-		var userPath = GetSafeFilePath("cards", path);
+		var userPath = GetSafeFilePath("cards", path.Replace(".png", ""));
 		if (!File.Exists(userPath))
 		{
 			context.Response.StatusCode = 404;
